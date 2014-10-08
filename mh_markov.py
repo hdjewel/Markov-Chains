@@ -61,6 +61,7 @@ def make_chains(corpus):
         else:
             d[prefix].append(suffix)
 
+
     return d
 
 def make_text(chains):
@@ -73,31 +74,38 @@ def make_text(chains):
     # random_prefix = random.sample(chains.keys(), 1)
     random_prefix = random.choice(chains.keys())
 
-    # get random suffix from the list
+    # # get random suffix from the list
     random_suffix = random.choice(chains[random_prefix])
-    markov_text = ""
-    for word in random_prefix:
-        markov_text += word + " "
+
+    markov_text = " "
+    second_init_prefix = []
+
+    second_init_prefix = random_prefix[1] + " " + random_suffix   
+    markov_text += random_prefix[0] + " " + second_init_prefix + " "
+        
+    # prefix = (random_prefix[1], random_suffix)
+    # new_suffix = chains(prefix)
+    # random_new_suffix = random.choice(chains[prefix])
+    prefix = random_prefix
+    new_suffix = random_suffix
+
     """
     take the second value of the random_prefix make it the first value and
     make the suffix the second value of the new key
 
     """
+
+    for i in range(5):
+        prefix = (prefix[1], new_suffix)
+
+        new_suffix = random.choice(chains[prefix])
+        markov_text += "%s " % new_suffix
+
+
+
     
 
-    #get new random prefix
-
-
-    print 2,  random_prefix
-    print 2.0, chains[random_prefix]
-    print 2.1, random_suffix
-    print 2.2, markov_text
-    # markov_text = random_prefix + random_prefix01...
-    # we wamt to loop through our logic from line 72 to line 75 
-    # this will build our random text.
-    # and the loop control is at this time arbitrary
-
-    return "Here's some random text."
+    return markov_text
 
 def main():
     script, filename = argv
@@ -119,7 +127,7 @@ def main():
 
     chain_dict = make_chains(input_text)
     random_text = make_text(chain_dict)
-    # print random_text
+    print random_text
 
 
 
