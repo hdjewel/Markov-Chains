@@ -13,11 +13,12 @@ def make_chains(corpus):
     new_corpus = "" 
     
     for char in corpus:
+        if char in "_[]*":
+            continue
         if char in exclude2:
             new_corpus += " "  
         else:
             new_corpus += char
-
 
     list_of_words = new_corpus.split()
 
@@ -63,7 +64,7 @@ def make_text(chains):
     random_new_suffix = random.choice(newsuffix)
 
 
-    for i in range(10):
+    for i in range(100):
         prefix = (prefix[1], suffix)
 
         suffix = random.choice(chains[prefix])
