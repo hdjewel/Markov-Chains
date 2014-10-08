@@ -40,10 +40,10 @@ def make_chains(corpus):
     # add link from end of wordlist to beginning of wordlist
     prefix = (list_of_words[-2], list_of_words[-1])
     suffix = list_of_words[0]
-    print suffix
+    ## print suffix
     d[prefix] = suffix
 
-    print d
+    ## print d
     return d
 
 def make_text(chains):
@@ -77,7 +77,7 @@ def make_text(chains):
         markov_text += "%s %s %s" % (prefix[0], prefix[1], suffix)
         markov_text += " "
 
-    print markov_text
+    return markov_text
 
 def main():
     script, filename = argv
@@ -87,6 +87,7 @@ def main():
 
     chain_dict = make_chains(input_text)
     random_text = make_text(chain_dict)
+    print random_text
 
 
 
