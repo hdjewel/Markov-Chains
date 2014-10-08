@@ -9,21 +9,15 @@ def make_chains(corpus):
     """Takes an input text as a string and returns a dictionary of
     markov chains."""
 
-    # maybe take this out later
-    exclude = string.punctuation
-
     exclude2 = "\n" + "\t"
     new_corpus = "" 
     
     for char in corpus:
-        if char in exclude:
-            continue
-        elif char in exclude2:
+        if char in exclude2:
             new_corpus += " "  
         else:
             new_corpus += char
 
-    new_corpus = new_corpus.lower()
 
     list_of_words = new_corpus.split()
 
