@@ -86,8 +86,9 @@ def make_text(chains):
 
 def main():
     script, filename = argv
-    input_text = open(filename)
-    input_text = input_text.read()
+    fin = open(filename)
+    input_text = fin.read()
+    fin.close()
 
 
     chain_dict = make_chains(input_text)
