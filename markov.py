@@ -9,117 +9,95 @@ def make_chains(corpus):
     """Takes an input text as a string and returns a dictionary of
     markov chains."""
 
-    # read lines --- we don't need to read the lines. We are reading it as one long string
-
-    # strip newlines, punctuation, tabs and make lower case
-    exclude = string.punctuation
-    exclude2 = "\n" + "\t"
-    new_corpus = "" #created new string because corpus string is immutable
+    new_corpus = "" 
+    
     for char in corpus:
-        if char in exclude:
+
+        # leave out certain kinds of punctuation
+        if char in "_[]*": # CAN WE DEAL WITH DOUBLE DASHES LATER? or char == "--":
             continue
-        elif char in exclude2:
-            # new_corpus += ""  -- doesn't work because it took away all the spaces at new lines
-            new_corpus += " "  #works, but creates double space at new lines. Should not be a problem
-                               #because we will split at a space
+        
+        # BELOW IS REDUNDANT DUE TO .SPLIT() BEING AWESOME
+        # replace newlines and tabs with a space
+        # if char in "\n\t":
+        #     new_corpus += " "
+
+        # put everything else in the new_corpus string      
         else:
             new_corpus += char
 
-
-
-    new_corpus = new_corpus.lower()
-
-    # create list of words on line
     list_of_words = new_corpus.split()
-
-    # create a dictionary where key = tuple of two words (prefix) and value = a list 
-    # of words that follow the prefix.
 
     d = {}
 
-    # for i in range(len(list_of_words)):
-     # Wendy thinks the following two lines will throw an IndexError
-
-    
-    for i in range( (len(list_of_words) - 2) ):  #Wendy's version to avoid IndexError
-    # print 0.01, IndexError   
-    # if IndexError:
-    #     break
-    # else:
+    for i in range( (len(list_of_words) - 2) ):
 
         prefix = (list_of_words[i], list_of_words[i+1])
         suffix = list_of_words[i+2] 
         
-        """
         if prefix not in d:
-                add the prefix as a key to d and setting suffix as the prefix's value
-            else
-                append suffix to the value of the prefix in d
-                """
-        if prefix not in d:
-            d[prefix] = [suffix]  #intializes the suffix as a list
+            d[prefix] = [suffix]  # initializes the suffix as a list
         else:
             d[prefix].append(suffix)
 
+    # add link from end of wordlist to beginning of wordlist
+    # prefix = (list_of_words[-2], list_of_words[-1])
+    # suffix = list_of_words[0]
+    # d[prefix] = suffix
+    # print 1.0, d
     return d
 
 def make_text(chains):
     """Takes a dictionary of markov chains and returns random text
     based off an original text."""
 
-    
-    # so to build our text the first prefex and suffix are random
-    # then we build our text from the suffix to a new prefix
-    # random_prefix = random.sample(chains.keys(), 1)
+    # create a list of chain's keys, then return one of the keys at random
     random_prefix = random.choice(chains.keys())
 
-    # get random suffix from the list
+    # from the list of values for the chosen key, return one value at random
     random_suffix = random.choice(chains[random_prefix])
+    
+    # initialize an empty string for our random text string
     markov_text = ""
+
+    # iterate over prefix's tuple and add each word to the random text string
     for word in random_prefix:
         markov_text += word + " "
-    """
-    take the second value of the random_prefix make it the first value and
-    make the suffix the second value of the new key
 
-    """
-    
+    # then add the suffix
+    markov_text += random_suffix + " "
 
-    #get new random prefix
+    # rename random_prefix and random_suffix so that we can call them
+    # in a the following for loop
+    prefix = random_prefix
+    suffix = random_suffix
 
+    for i in range(100):
 
-    print 2,  random_prefix
-    print 2.0, chains[random_prefix]
-    print 2.1, random_suffix
-    print 2.2, markov_text
-    # markov_text = random_prefix + random_prefix01...
-    # we wamt to loop through our logic from line 72 to line 75 
-    # this will build our random text.
-    # and the loop control is at this time arbitrary
+        # create a new prefix from the last item in the old prefix and
+        # the last suffix
+        prefix = (prefix[1], suffix)
+        if prefix not in chains:
+            print "EARLY END"
+            break
+        # choose a random suffix from the new prefix's values
+        suffix = random.choice(chains[prefix])
 
-    return "Here's some random text."
+        # add it all to the random text string
+        markov_text += "%s " % suffix
+
+    return markov_text
 
 def main():
     script, filename = argv
-    # args = sys.argv
-    # print 1, args[1]
-    # print 1.0, type(args[1])
+    fin = open(filename)
+    input_text = fin.read()
+    fin.close()
 
-    # Change this to read input_text from a file
-    # input_text = open(args[1])
-    input_text = open(filename)
-#    content = input_text.read()
-#    input_text = input_text.read().replace(\n)
-    input_text = input_text.read()
-
-    # print 1.1, input_text
-    # print 1.2, type(input_text)
-
-# do read
 
     chain_dict = make_chains(input_text)
     random_text = make_text(chain_dict)
-    # print random_text
+    print random_text
 
 
 
